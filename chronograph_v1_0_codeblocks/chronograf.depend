@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1347393876 source:/mnt/win_c/works/chronograf/main.c
+	<avr/io.h>
+	<avr/interrupt.h>
+
+1348595740 source:c:\works\chronograf\main.c
+	<avr/io.h>
+	<avr/interrupt.h>
+	<util/delay.h>
+

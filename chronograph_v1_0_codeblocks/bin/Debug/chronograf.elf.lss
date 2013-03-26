@@ -1,0 +1,263 @@
+
+bin/Debug/chronograf.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000170  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .bss          0000000d  00800060  00800060  000001e4  2**0
+                  ALLOC
+  2 .stab         00000bb8  00000000  00000000  000001e4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      000008a8  00000000  00000000  00000d9c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	1f c0       	rjmp	.+62     	; 0x42 <__bad_interrupt>
+   4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
+   6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
+   8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
+   a:	1c c0       	rjmp	.+56     	; 0x44 <__vector_5>
+   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
+   e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
+  10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
+  12:	17 c0       	rjmp	.+46     	; 0x42 <__bad_interrupt>
+  14:	16 c0       	rjmp	.+44     	; 0x42 <__bad_interrupt>
+  16:	15 c0       	rjmp	.+42     	; 0x42 <__bad_interrupt>
+  18:	14 c0       	rjmp	.+40     	; 0x42 <__bad_interrupt>
+  1a:	13 c0       	rjmp	.+38     	; 0x42 <__bad_interrupt>
+  1c:	12 c0       	rjmp	.+36     	; 0x42 <__bad_interrupt>
+  1e:	11 c0       	rjmp	.+34     	; 0x42 <__bad_interrupt>
+  20:	10 c0       	rjmp	.+32     	; 0x42 <__bad_interrupt>
+  22:	0f c0       	rjmp	.+30     	; 0x42 <__bad_interrupt>
+  24:	0e c0       	rjmp	.+28     	; 0x42 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf ed       	ldi	r28, 0xDF	; 223
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_clear_bss>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	01 c0       	rjmp	.+2      	; 0x38 <.do_clear_bss_start>
+
+00000036 <.do_clear_bss_loop>:
+  36:	1d 92       	st	X+, r1
+
+00000038 <.do_clear_bss_start>:
+  38:	ad 36       	cpi	r26, 0x6D	; 109
+  3a:	b1 07       	cpc	r27, r17
+  3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
+  3e:	67 d0       	rcall	.+206    	; 0x10e <main>
+  40:	95 c0       	rjmp	.+298    	; 0x16c <_exit>
+
+00000042 <__bad_interrupt>:
+  42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
+
+00000044 <__vector_5>:
+// __Functions:__
+
+//   - IRQ:
+
+ISR(TIMER1_OVF_vect)
+{
+  44:	1f 92       	push	r1
+  46:	0f 92       	push	r0
+  48:	0f b6       	in	r0, 0x3f	; 63
+  4a:	0f 92       	push	r0
+  4c:	11 24       	eor	r1, r1
+  4e:	8f 93       	push	r24
+
+    PORTB = 0b00000000;
+  50:	18 ba       	out	0x18, r1	; 24
+
+    if (u8_temp <= 128)
+  52:	80 91 64 00 	lds	r24, 0x0064
+  56:	81 38       	cpi	r24, 0x81	; 129
+  58:	20 f4       	brcc	.+8      	; 0x62 <__vector_5+0x1e>
+        {
+        PORTB = 0b11111111;
+  5a:	8f ef       	ldi	r24, 0xFF	; 255
+  5c:	88 bb       	out	0x18, r24	; 24
+        u8_temp = 0;
+  5e:	10 92 64 00 	sts	0x0064, r1
+        }
+    u8_temp++;
+  62:	80 91 64 00 	lds	r24, 0x0064
+  66:	8f 5f       	subi	r24, 0xFF	; 255
+  68:	80 93 64 00 	sts	0x0064, r24
+};
+  6c:	8f 91       	pop	r24
+  6e:	0f 90       	pop	r0
+  70:	0f be       	out	0x3f, r0	; 63
+  72:	0f 90       	pop	r0
+  74:	1f 90       	pop	r1
+  76:	18 95       	reti
+
+00000078 <Calculate_function>:
+int Calculate_function()
+    {
+
+    // all interupts must be  allowed
+
+    u32_time_betwen_pulse = u8_tmr1_ovf_counter * 65535;   //old value is overwrite
+  78:	60 91 60 00 	lds	r22, 0x0060
+  7c:	70 e0       	ldi	r23, 0x00	; 0
+  7e:	80 e0       	ldi	r24, 0x00	; 0
+  80:	90 e0       	ldi	r25, 0x00	; 0
+  82:	2f ef       	ldi	r18, 0xFF	; 255
+  84:	3f ef       	ldi	r19, 0xFF	; 255
+  86:	40 e0       	ldi	r20, 0x00	; 0
+  88:	50 e0       	ldi	r21, 0x00	; 0
+  8a:	57 d0       	rcall	.+174    	; 0x13a <__mulsi3>
+  8c:	9b 01       	movw	r18, r22
+  8e:	ac 01       	movw	r20, r24
+  90:	20 93 69 00 	sts	0x0069, r18
+  94:	30 93 6a 00 	sts	0x006A, r19
+  98:	40 93 6b 00 	sts	0x006B, r20
+  9c:	50 93 6c 00 	sts	0x006C, r21
+    u32_time_betwen_pulse = u32_time_betwen_pulse + u16_tmr1_stop_value;
+  a0:	20 91 69 00 	lds	r18, 0x0069
+  a4:	30 91 6a 00 	lds	r19, 0x006A
+  a8:	40 91 6b 00 	lds	r20, 0x006B
+  ac:	50 91 6c 00 	lds	r21, 0x006C
+  b0:	80 91 67 00 	lds	r24, 0x0067
+  b4:	90 91 68 00 	lds	r25, 0x0068
+  b8:	a0 e0       	ldi	r26, 0x00	; 0
+  ba:	b0 e0       	ldi	r27, 0x00	; 0
+  bc:	82 0f       	add	r24, r18
+  be:	93 1f       	adc	r25, r19
+  c0:	a4 1f       	adc	r26, r20
+  c2:	b5 1f       	adc	r27, r21
+  c4:	80 93 69 00 	sts	0x0069, r24
+  c8:	90 93 6a 00 	sts	0x006A, r25
+  cc:	a0 93 6b 00 	sts	0x006B, r26
+  d0:	b0 93 6c 00 	sts	0x006C, r27
+    u32_time_betwen_pulse = u32_time_betwen_pulse - u16_tmr1_start_value;
+  d4:	80 91 69 00 	lds	r24, 0x0069
+  d8:	90 91 6a 00 	lds	r25, 0x006A
+  dc:	a0 91 6b 00 	lds	r26, 0x006B
+  e0:	b0 91 6c 00 	lds	r27, 0x006C
+  e4:	20 91 65 00 	lds	r18, 0x0065
+  e8:	30 91 66 00 	lds	r19, 0x0066
+  ec:	40 e0       	ldi	r20, 0x00	; 0
+  ee:	50 e0       	ldi	r21, 0x00	; 0
+  f0:	82 1b       	sub	r24, r18
+  f2:	93 0b       	sbc	r25, r19
+  f4:	a4 0b       	sbc	r26, r20
+  f6:	b5 0b       	sbc	r27, r21
+  f8:	80 93 69 00 	sts	0x0069, r24
+  fc:	90 93 6a 00 	sts	0x006A, r25
+ 100:	a0 93 6b 00 	sts	0x006B, r26
+ 104:	b0 93 6c 00 	sts	0x006C, r27
+
+    return 0;
+    };
+ 108:	80 e0       	ldi	r24, 0x00	; 0
+ 10a:	90 e0       	ldi	r25, 0x00	; 0
+ 10c:	08 95       	ret
+
+0000010e <main>:
+    // Variables:
+    unsigned char u8_temp = 0;
+    //unsigned long u32_time
+
+    // Ports settings:
+    DDRB = 0b11111111;          // all ports B are outputs for debuging :)
+ 10e:	8f ef       	ldi	r24, 0xFF	; 255
+ 110:	87 bb       	out	0x17, r24	; 23
+    // Timer1 settings:
+
+
+    // UART settings:
+    u8_temp = 0b00000000;
+    UBRRH = u8_temp;
+ 112:	12 b8       	out	0x02, r1	; 2
+    u8_temp = 0b10000001;
+	UBRRL = u8_temp;		//baudrate 9600
+ 114:	81 e8       	ldi	r24, 0x81	; 129
+ 116:	89 b9       	out	0x09, r24	; 9
+	u8_temp = 0b00000000;
+	UCSRA = u8_temp;
+ 118:	1b b8       	out	0x0b, r1	; 11
+	u8_temp = 0b00001000;
+	UCSRB = u8_temp;		//Tx on
+ 11a:	88 e0       	ldi	r24, 0x08	; 8
+ 11c:	8a b9       	out	0x0a, r24	; 10
+	u8_temp = 0b00001110;
+	UCSRC = u8_temp;		//8 data bits, no parity, async.
+ 11e:	8e e0       	ldi	r24, 0x0E	; 14
+ 120:	83 b9       	out	0x03, r24	; 3
+
+
+    TCCR1B = 0b00000000; //start citace, delicka 1:1
+ 122:	1e bc       	out	0x2e, r1	; 46
+    TCNT1 = 0;// registr citace
+ 124:	1d bc       	out	0x2d, r1	; 45
+ 126:	1c bc       	out	0x2c, r1	; 44
+    TIMSK = 0b00000001;// povoleni preruseni timeru0 na preteceni
+ 128:	81 e0       	ldi	r24, 0x01	; 1
+ 12a:	89 bf       	out	0x39, r24	; 57
+    sei(); //globalni povoleni preruseni
+ 12c:	78 94       	sei
+
+
+    while(1)
+    {
+
+        while(u8_calc_func_allowed == 0)       // wait until time has measured
+ 12e:	80 91 63 00 	lds	r24, 0x0063
+ 132:	88 23       	and	r24, r24
+ 134:	e1 f3       	breq	.-8      	; 0x12e <main+0x20>
+        {
+        };
+
+
+        Calculate_function();
+ 136:	a0 df       	rcall	.-192    	; 0x78 <Calculate_function>
+ 138:	fa cf       	rjmp	.-12     	; 0x12e <main+0x20>
+
+0000013a <__mulsi3>:
+ 13a:	ff 27       	eor	r31, r31
+ 13c:	ee 27       	eor	r30, r30
+ 13e:	bb 27       	eor	r27, r27
+ 140:	aa 27       	eor	r26, r26
+
+00000142 <__mulsi3_loop>:
+ 142:	60 ff       	sbrs	r22, 0
+ 144:	04 c0       	rjmp	.+8      	; 0x14e <__mulsi3_skip1>
+ 146:	a2 0f       	add	r26, r18
+ 148:	b3 1f       	adc	r27, r19
+ 14a:	e4 1f       	adc	r30, r20
+ 14c:	f5 1f       	adc	r31, r21
+
+0000014e <__mulsi3_skip1>:
+ 14e:	22 0f       	add	r18, r18
+ 150:	33 1f       	adc	r19, r19
+ 152:	44 1f       	adc	r20, r20
+ 154:	55 1f       	adc	r21, r21
+ 156:	96 95       	lsr	r25
+ 158:	87 95       	ror	r24
+ 15a:	77 95       	ror	r23
+ 15c:	67 95       	ror	r22
+ 15e:	89 f7       	brne	.-30     	; 0x142 <__mulsi3_loop>
+ 160:	00 97       	sbiw	r24, 0x00	; 0
+ 162:	76 07       	cpc	r23, r22
+ 164:	71 f7       	brne	.-36     	; 0x142 <__mulsi3_loop>
+
+00000166 <__mulsi3_exit>:
+ 166:	cf 01       	movw	r24, r30
+ 168:	bd 01       	movw	r22, r26
+ 16a:	08 95       	ret
+
+0000016c <_exit>:
+ 16c:	f8 94       	cli
+
+0000016e <__stop_program>:
+ 16e:	ff cf       	rjmp	.-2      	; 0x16e <__stop_program>
