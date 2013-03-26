@@ -1,0 +1,2 @@
+There are some data of my previous projects. The first one is ProMeS, which I built in 2011. It worked fine, but only with "one µs" resolution (very bad design) and on the development board. Later I had to give it back. So I lost my measurement device :(.
+The second prject I bult on AVR ATtiny2313 on 20MHz Xtal, it could only measure time and send it into the computer. It was fast but not fast enough (bad design). So I built only one prototype  :).
