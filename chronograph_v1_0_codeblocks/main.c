@@ -1,7 +1,7 @@
 /*
 
 ***********************************
-*        Chronograph V2.0         *
+*        Chronograph V1.0         *
 *   (counter and sender by UART)  *
 *	     	20 MHz Xtal		   	  *
 *	    	ATTiny 2313		      *
