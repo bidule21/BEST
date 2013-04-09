@@ -1,0 +1,57 @@
+--Promnene:
+nazev (popis, rozsah hodnot)
+
+pocitadla:
+tmr1_ovf_counter (pocet preteceni tmr1, 0 - 5 )
+irq_ext_counter (pocet vnejsich signalu preruseni, 1 - 2)
+
+povolovace:
+tmr1_ovf_counter_allowed (poveleni pro zaznam poctu preteceni citace, 0 - 1)
+calc_func_allowed (povoleni pro zahajeni vypoctu mezi vnejsimi prerusenimi, 0 - 1)
+
+
+ostatni
+tmr1_start_value (hodnota tmr1 pri prvnim vnejsim preruseni, 0 - 65535 )
+tmr1_stop_value (hodnota tmr1 pri druhem vnejsim preruseni, 0 - 65535 )
+
+
+
+
+--Funkce:
+
+__IRQ1_Timer1_Overflow()
+promene: tmr1_ovf_counter
+	 tmr1_ovf_counter_allowed
+	 
+prubeh:	Kdyz je tmr1_ovf_counter_allowed == 1, tak se kazde pri kazdem preruseni zvedne tmr1_ovf_counter o 1.
+
+
+
+
+__IRQ2_External_interrupt()
+promene: tmr1_start_value
+	 tmr1_stop_value
+	 tmr1_ovf_counter_allowed
+	 calc_func_allowed
+	 irq_ext_counter
+
+prubeh:	Pri lichem (prvnim - irq_ext_counter == 1) preruseni od externiho signalu dojde k ulozeni hodnoty casovace do tmr1_start_value. Nastavi se tmr1_ovf_counter_allowed na 1. Nastaveni irq_ext_counter na 2.
+	Pri sudem (druhem - irq_ext_counter == 2) preruseni od externiho signalu dojde k ulozeni hodnoty casovace do tmr1_stop_value. Nastavi se tmr1_ovf_counter_allowed na 0. Nastaveni irq_ext_counter na 1. Nastavi se calc_func_allowed na 1. 
+	 
+	 
+
+__Calculate_function()
+promenne: tmr1_start_value
+	  tmr1_stop_value
+	  tmr1_ovf_counter
+	  calc_func_allowed
+
+prubeh:	Zakazani vsech preruseni. Provedeni vypoctu. Cas_pruletu = (tmr1_stop_value + tmr1_ovf_counter * 65535) - tmr1_start_value. 
+
+
+__Send_functoion()
+promenne:
+
+prubeh:	Zahajeni odeslani dat. Po skonceni odeslani vsech dat povoleni vsech preruseni.
+
+
