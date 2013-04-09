@@ -1,0 +1,7 @@
+v1.1
+- each number of data is sent as a separate 8 bit character
+- at high values errors appear (reason is unknown for now)
+
+v1.0
+- measuring and sendig data via uart.
+- data are sent in three 8-bit characters
